@@ -1,12 +1,6 @@
-/* bkerndev - Bran's Kernel Development Tutorial
-*  By:   Brandon F. (friesenb@gmail.com)
-*  Desc: Screen output functions for Console I/O
-*
-*  Notes: No warranty expressed or implied. Use at own risk. */
+
 #include <system.h>
 
-/* These define our textpointer, our background and foreground
-*  colors (attributes), and x and y cursor coordinates */
 unsigned short *textmemptr;
 int attrib = 0x0F;
 int csr_x = 0, csr_y = 0;
@@ -35,24 +29,11 @@ void scroll(void)
     }
 }
 
-/* Updates the hardware cursor: the little blinking line
-*  on the screen under the last character pressed! */
 void move_csr(void)
 {
     unsigned temp;
 
-    /* The equation for finding the index in a linear
-    *  chunk of memory can be represented by:
-    *  Index = [(y * width) + x] */
     temp = csr_y * 80 + csr_x;
-
-    /* This sends a command to indicies 14 and 15 in the
-    *  CRT Control Register of the VGA controller. These
-    *  are the high and low bytes of the index that show
-    *  where the hardware cursor is to be 'blinking'. To
-    *  learn more, you should look up some VGA specific
-    *  programming documents. A great start to graphics:
-    *  http://www.brackeen.com/home/vga */
     outportb(0x3D4, 14);
     outportb(0x3D5, temp >> 8);
     outportb(0x3D4, 15);
@@ -65,8 +46,6 @@ void cls()
     unsigned blank;
     int i;
 
-    /* Again, we need the 'short' that will be used to
-    *  represent a space with color */
     blank = 0x20 | (attrib << 8);
 
     /* Sets the entire screen to spaces in our current
@@ -74,14 +53,10 @@ void cls()
     for(i = 0; i < 25; i++)
         memsetw (textmemptr + i * 80, blank, 80);
 
-    /* Update out virtual cursor, and then move the
-    *  hardware cursor */
     csr_x = 0;
     csr_y = 0;
     move_csr();
 }
-
-/* Puts a single character on the screen */
 void putch(unsigned char c)
 {
     unsigned short *where;
@@ -92,8 +67,7 @@ void putch(unsigned char c)
     {
         if(csr_x != 0) csr_x--;
     }
-    /* Handles a tab by incrementing the cursor's x, but only
-    *  to a point that will make it divisible by 8 */
+    
     else if(c == 0x09)
     {
         csr_x = (csr_x + 8) & ~(8 - 1);
