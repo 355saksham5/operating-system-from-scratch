@@ -1,8 +1,4 @@
-/* bkerndev - Bran's Kernel Development Tutorial
-*  By:   Brandon F. (friesenb@gmail.com)
-*  Desc: Keyboard driver
-*
-*  Notes: No warranty expressed or implied. Use at own risk. */
+
 #include <system.h>
 
 /* KBDUS means US Keyboard Layout. This is a scancode table
@@ -67,18 +63,7 @@ void keyboard_handler(struct regs *r)
     }
     else
     {
-        /* Here, a key was just pressed. Please note that if you
-        *  hold a key down, you will get repeated key press
-        *  interrupts. */
-
-        /* Just to show you how this works, we simply translate
-        *  the keyboard scancode into an ASCII value, and then
-        *  display it to the screen. You can get creative and
-        *  use some flags to see if a shift is pressed and use a
-        *  different layout, or you can add another 128 entries
-        *  to the above layout to correspond to 'shift' being
-        *  held. If shift is held using the larger lookup table,
-        *  you would add 128 to the scancode when you look for it */
+       
         putch(kbdus[scancode]);
     }
 }
